@@ -4,17 +4,15 @@ import 'package:firebase_signin/screens/home_screen.dart';
 import 'package:firebase_signin/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<ResetPassword> createState() => _ResetPasswordState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController _emailTextController = TextEditingController();
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _userNameTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'Sign Up',
+          'Reset Password',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -48,12 +46,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                reusableTextField(
-                  'Enter UserName',
-                  Icons.person_outline,
-                  false,
-                  _userNameTextController,
-                ),
                 const SizedBox(height: 20),
                 reusableTextField(
                   'Enter Email ID',
@@ -62,28 +54,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _emailTextController,
                 ),
                 const SizedBox(height: 20),
-                reusableTextField(
-                  'Enter Password',
-                  Icons.lock_outline,
-                  true,
-                  _passwordTextController,
-                ),
-                const SizedBox(height: 20),
-                firebaseButton(context, 'SIGN UP', () {
+                firebaseButton(context, 'RESET PASSWORD', () {
                   FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    print('Created New Acount');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        )).onError((error, stackTrace) {
-                      print('error ${error.toString()}');
-                    });
-                  });
+                      .sendPasswordResetEmail(email: _emailTextController.text)
+                      .then((value) => Navigator.of(context).pop());
                 })
               ],
             ),

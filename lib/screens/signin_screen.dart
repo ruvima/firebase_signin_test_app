@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_signin/reusable_widgets/reusable_widgets.dart';
 import 'package:firebase_signin/screens/home_screen.dart';
+import 'package:firebase_signin/screens/reset_password.dart';
 import 'package:firebase_signin/screens/signup_screen.dart';
 import 'package:firebase_signin/utils/color_utils.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _emailTextController = TextEditingController();
-  TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +59,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   _passwordTextController,
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 5,
                 ),
-                signInSignUpButton(context, true, () {
+                forgetPassword(context),
+                firebaseButton(context, 'SIGN IN', () {
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
                           email: _emailTextController.text,
@@ -68,7 +70,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       .then((value) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
                     ).onError((error, stackTrace) {
                       print('errorr ${error.toString()}');
                     });
@@ -96,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SignUpScreen(),
+                  builder: (context) => const SignUpScreen(),
                 ));
           },
           child: const Text(
@@ -108,6 +111,25 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         )
       ],
+    );
+  }
+
+  forgetPassword(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 35,
+      alignment: Alignment.bottomRight,
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ResetPassword()));
+        },
+        child: const Text(
+          'Forgot Password?',
+          style: TextStyle(color: Colors.white70),
+          textAlign: TextAlign.right,
+        ),
+      ),
     );
   }
 }
